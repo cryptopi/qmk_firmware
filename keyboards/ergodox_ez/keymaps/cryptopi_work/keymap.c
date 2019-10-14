@@ -18,6 +18,11 @@ enum custom_keycodes {
   VRSN,
   RGB_SLD,
 
+  UNDER_DASH, // underscore regular, dash when shift is applied
+
+  // Windows specific
+  LOCK,
+  CTRL_ALT_DELETE
 };
 
 enum {
@@ -58,53 +63,58 @@ enum {
   TABLE_FLIP_A,
 
   // Shortcuts
-  A_COPY,
-  S_PASTE
+  Y_COPY,
+  U_CUT,
+  J_PASTE
 };
 
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  // Note missing grave key
+  // Also note that the home, end, page up, and page down keys are of limited
+  // use potentially
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           | RIGHT|   6  |   7  |   8  |   9  |   0  |   -    |
+ * |   =    |   1  |   2  |   3  |   4  |   5  | EMOJ |           | RIGHT|   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Del    |   Q  |   W  |   E  |   R  |   T  |  L1  |           |  L1  |   Y  |   U  |   I  |   O  |   P  |   \    |
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  |  L1  |           |LOCK  |  Y   |  U   |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | BkSp   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |; / L2|' / Cmd |
- * |--------+------+------+------+------+------| Hyper|           | Meh  |------+------+------+------+------+--------|
- * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |//Ctrl| RShift |
+ * | BkSp   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |  J   |   K  |   L  |; / L2|' / Cmd |
+ * |--------+------+------+------+------+------| Hyper|           | CAD  |------+------+------+------+------+--------|
+ * | LShift |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |Grv/L1|  '"  |AltShf| Left | Right|                                       |  Up  | Down |   [  |   ]  | ~L1  |
+ *   |Symb |  Ctrl |AltShf| Left | Right|                                       |  Up  | Down |   [  |   ]  | ~L1  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | App  | LGui |       | Alt  |Ctrl/Esc|
+ *                                        |   {  | _/-  |       | Alt  | Esc  |
  *                                 ,------|------|------|       |------+--------+------.
  *                                 |      |      | Home |       | PgUp |        |      |
- *                                 | Space|Backsp|------|       |------|  Tab   |Enter |
- *                                 |      |ace   | End  |       | PgDn |        |      |
+ *                                 | Space|Ctrl  |------|       |------|  Del   |Enter |
+ *                                 |      |      | End  |       | PgDn |        |      |
  *                                 `--------------------'       `----------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
 // Otherwise, it needs KC_*
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
-        KC_EQUAL,         KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   KC_LEFT,
-        TG(EMOJ),        KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   TG(SYMB),
-        KC_BSPC,        TD(A_COPY),    TD(S_PASTE),   KC_D,   KC_F,   KC_G,
-        KC_LSFT,        CTL_T(KC_Z),  KC_X,   KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
-        LT(SYMB,KC_GRV),KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_RGHT,
-                                              ALT_T(KC_APP),  KC_LGUI,
+        KC_EQUAL,         KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   TG(EMOJ),
+        KC_TAB,        KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   TG(SYMB),
+        KC_BSPC,        KC_A,    KC_S,   KC_D,   KC_F,   KC_G,
+        KC_LSHIFT,        KC_Z,  KC_X,   KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
+        MO(SYMB),KC_LCTRL,      LALT(KC_LSFT),  KC_LEFT,KC_RGHT,
+                                              KC_LEFT_CURLY_BRACE, KC_MINUS,
                                                               KC_HOME,
-                                               KC_SPC,KC_BSPC,KC_END,
+                                               KC_SPC,KC_RCTRL,KC_END,
         // right hand
-             KC_RGHT,     KC_6,   KC_7,  KC_8,   KC_9,   KC_0,             KC_MINS,
-             TG(SYMB),    KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,             KC_BSLS,
-                          KC_H,   KC_J,  KC_K,   KC_L,   KC_SCOLON,GUI_T(KC_QUOT),
-             MEH_T(KC_NO),KC_N,   KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH),   KC_RSFT,
+             KC_RGHT,          KC_6,   KC_7,  KC_8,   KC_9,   KC_0,             KC_MINS,
+             LOCK,             KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,             KC_BSLS,
+                                          KC_H,   KC_J,  KC_K,   KC_L,   KC_SCOLON,GUI_T(KC_QUOT),
+             CTRL_ALT_DELETE , KC_N,   KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH),   KC_RSHIFT,
                                   KC_UP, KC_DOWN,KC_LBRC,KC_RBRC,          KC_FN1,
-             KC_LALT,        CTL_T(KC_ESC),
+             KC_LALT,        KC_ESC,
              KC_PGUP,
-             KC_PGDN,KC_TAB, KC_ENT
+             KC_PGDN,KC_DELETE, KC_ENT
     ),
 /* Keymap 1: Symbol Layer
  *
@@ -366,8 +376,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [SHRUG_A] = ACTION_TAP_DANCE_FN (tap_dance_emoji),
   [TABLE_FLIP_A] = ACTION_TAP_DANCE_FN (tap_dance_emoji),
 
-  [A_COPY] = ACTION_TAP_DANCE_DOUBLE (KC_A, LGUI(KC_C)),
-  [S_PASTE] = ACTION_TAP_DANCE_DOUBLE (KC_S, LGUI(KC_V))
+  [Y_COPY] = ACTION_TAP_DANCE_DOUBLE (KC_Y, LGUI(KC_C)),
+  [U_CUT] = ACTION_TAP_DANCE_DOUBLE (KC_U, LGUI(KC_X)),
+  [J_PASTE] = ACTION_TAP_DANCE_DOUBLE (KC_J, LGUI(KC_V))
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -393,6 +404,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case LOCK:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LGUI("l"));
+      }
+      break;
+    case CTRL_ALT_DELETE:
+      if (record->event.pressed) {
+        SEND_STRING(SS_DOWN(X_RCTRL)SS_DOWN(X_RALT)SS_DOWN(X_DELETE)SS_UP(X_RCTRL)SS_UP(X_RALT)SS_UP(X_DELETE));
+      }
+      break;
+    // case UNDER_DASH:
+    //   // Note: could also make it so some press count flips behavior so is
+    //   // an underscore with shift and is regular dash without as normal
+    //   if (record->event.pressed) {
+    //     int shift_mod_bits = MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT);
+    //     int shift_pressed = get_mods() & shift_mod_bits;
+    //     if (shift_pressed) {
+    //       SEND_STRING("-");
+    //     } else {
+    //       SEND_STRING("_");
+    //     }
+    //   }
   }
   return true;
 }
